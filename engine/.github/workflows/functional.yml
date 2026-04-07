@@ -1,0 +1,62 @@
+name: Functional Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  functional:
+    name: Functional
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # see more at
+      # https://docs.astral.sh/uv/guides/integration/github/
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+
+      - name: Prepare environment
+        run: uv sync --all-extras --dev
+
+      - name: Run black formatting
+        run: uv run black --check --verbose ./tests
+
+      - name: Run pylint linter
+        run: uv run pylint --verbose ./tests
+
+      # Required for compiling the project, as it depends on the bitcoinkernel
+      - name: Install Boost
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libboost-all-dev
+
+      - name: Cache Rust
+        uses: Swatinem/rust-cache@v2
+
+      - name: Prepare functional tests tasks
+        run: |
+          tests/prepare.sh --release
+
+      - name: Run functional tests tasks
+        run: |
+          tests/run.sh
+
+      - name: Log tests on failure
+        if: failure()
+        run: |
+          logs=()
+          while IFS= read -r line; do
+            logs+=("$line")
+          done < <(find /tmp/floresta-func-tests* -type f -path "*/logs/*.log" 2>/dev/null || true)
+
+          for logfile in "${logs[@]}"; do
+            echo "::group::$logfile"
+            cat "$logfile" || echo "Failed to read $logfile"
+            echo "::endgroup::"
+          done

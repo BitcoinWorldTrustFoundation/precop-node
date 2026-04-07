@@ -1,0 +1,40 @@
+# Build outputs
+/target
+/builds
+/result
+
+# Man-pages
+doc/rpc_man/*.gz
+
+# Temporary files and generated data
+tmp/
+tmp-db/
+data/
+debug.log
+
+# Performance data and generated performance graphs
+perf.*
+*.svg
+
+#utreexod is produced by prepare.sh
+utreexod/
+
+# Configuration files
+config.toml
+.pre-commit-config.yaml
+
+# direnv cache
+.direnv/
+
+# IDE configurations
+.idea/
+.vscode/
+
+# uv python management
+.venv
+
+# tests pycache
+tests/**/__pycache__/*
+
+# commitizen under nixdevshell
+.cz.toml

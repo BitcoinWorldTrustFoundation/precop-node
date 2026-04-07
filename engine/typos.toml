@@ -1,0 +1,2 @@
+[files]
+extend-exclude = ["bin/florestad/docs/tutorial(PT-BR).md", "crates/floresta-wire/seeds"]

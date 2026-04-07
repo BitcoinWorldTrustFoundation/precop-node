@@ -1,0 +1,46 @@
+[package]
+name = "floresta-wire"
+version = "0.5.0"
+edition = "2021"
+authors = ["Floresta Developers <contact@getfloresta.org>"]
+description = """
+    Some utreexo-aware wire protocol for floresta. You can use this crate
+    to fetch blocks and transactions from the network, and to broadcast
+    your own transactions.
+"""
+repository = "https://github.com/getfloresta/Floresta"
+license = "MIT"
+readme = "README.md"
+keywords = ["bitcoin", "utreexo", "p2p", "networking"]
+categories = ["cryptography::cryptocurrencies", "network-programming"]
+
+[dependencies]
+bip324 = { version = "0.10", features = [ "tokio" ] }
+bitcoin = { workspace = true }
+dns-lookup = { workspace = true }
+rand = { workspace = true }
+rustls = "=0.23.27"
+rustreexo = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tokio = { workspace = true, features = ["sync"] }
+tracing = { workspace = true }
+ureq = { version = "3.1", features = ["socks-proxy", "json", "rustls-no-provider"], default-features = false }
+
+# Local dependencies
+floresta-chain = { workspace = true, features = ["flat-chainstore"] }
+floresta-compact-filters = { workspace = true }
+floresta-common = { workspace = true }
+floresta-mempool = { workspace = true }
+metrics = { workspace = true,  optional = true }
+
+[dev-dependencies]
+zstd = { workspace = true }
+derive_more = { version = "2.1", features = ["constructor"] }
+
+[features]
+default = []
+metrics = ["dep:metrics"]
+
+[lints]
+workspace = true

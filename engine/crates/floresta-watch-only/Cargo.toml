@@ -1,0 +1,34 @@
+[package]
+name = "floresta-watch-only"
+version = "0.5.0"
+edition = "2021"
+description = "A simple, lightweight and Electrum-First, watch-only wallet"
+authors = ["Floresta Developers <contact@getfloresta.org>"]
+keywords = ["bitcoin", "watch-only", "electrum-server"]
+categories = ["cryptography::cryptocurrencies"]
+license = "MIT"
+repository = "https://github.com/getfloresta/Floresta"
+readme.workspace = true # Floresta/README.md
+
+[dependencies]
+bitcoin = { workspace = true, features = ["serde"] }
+kv = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true, features = ["alloc"] }
+tracing = { workspace = true }
+
+# Local dependencies
+floresta-chain = { workspace = true }
+floresta-common = { workspace = true, features = ["descriptors-no-std"] }
+
+[dev-dependencies]
+rand = { workspace = true }
+
+[features]
+default = ["std"]
+memory-database = []
+# The default features in common are `std` and `descriptors-std` (which is a superset of `descriptors-no-std`)
+std = ["floresta-common/default", "serde/std"]
+
+[lints]
+workspace = true

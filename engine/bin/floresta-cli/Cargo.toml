@@ -1,0 +1,28 @@
+[package]
+name = "floresta-cli"
+version = "0.5.0"
+edition = "2021"
+authors = ["Floresta Developers <contact@getfloresta.org>"]
+license = "MIT"
+description = """
+A command line interface for Florestad.
+
+You can use this client to interact with a running Florestad node. Check out doc/rpc/ or run `floresta-cli --help` for more information
+on how to use the CLI.
+"""
+repository = "https://github.com/getfloresta/Floresta"
+readme = "README.md"
+keywords = ["bitcoin", "utreexo", "node", "blockchain", "rust"]
+categories = ["cryptography::cryptocurrencies", "command-line-utilities"]
+
+[dependencies]
+anyhow = "1.0"
+bitcoin = { workspace = true }
+clap = { workspace = true, features = ["help"] }
+serde_json = { workspace = true }
+
+# Local dependencies
+floresta-rpc = { workspace = true, features = ["clap"] }
+
+[lints]
+workspace = true

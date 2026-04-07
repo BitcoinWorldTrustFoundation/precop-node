@@ -23,7 +23,7 @@ cd "$SOURCE_DIR"
 cargo build --release
 
 echo "🛡️  MIGRATING NEWLY FORGED BINARY..."
-cp target/release/precopscan-node "$PROJECT_ROOT/bin/"
-chmod +x "$PROJECT_ROOT/bin/precopscan-node"
+cp target/release/precop-node "$PROJECT_ROOT/bin/"
+chmod +x "$PROJECT_ROOT/bin/precop-node"
 
 echo "✅ LOCAL BASTION FORGED SUCCESSFULLY."

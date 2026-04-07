@@ -1,0 +1,60 @@
+[package]
+name = "floresta-chain"
+version = "0.5.0"
+edition = "2021"
+authors = ["Floresta Developers <contact@getfloresta.org>"]
+description = """
+    Reusable components for building consensus-critical Bitcoin applications.
+    Using floresta-chain, you can create a Bitcoin node that validates blocks
+    and transactions, according to the Bitcoin consensus rules.
+"""
+repository = "https://github.com/getfloresta/Floresta"
+license = "MIT"
+readme.workspace = true # Floresta/README.md
+keywords = ["bitcoin", "utreexo", "node", "consensus"]
+categories = ["cryptography::cryptocurrencies", "database"]
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+bitcoin = { workspace = true }
+bitcoinkernel = { version = "0.2", optional = true }
+lru = { version = "0.16", optional = true }
+memmap2 = { version = "0.9", optional = true }
+rustreexo = { workspace = true }
+hex = { workspace = true }
+serde = { workspace = true, optional = true }
+sha2 = { workspace = true, features = ["std"] }
+spin = { workspace = true }
+tracing = { workspace = true }
+twox-hash = { version = "2.1", default-features = false, features = ["xxhash3_64", "std"], optional = true }
+
+# Local dependencies
+floresta-common = { workspace = true, features = ["std"] }
+metrics = { workspace = true,  optional = true }
+
+[dev-dependencies]
+bitcoin = { workspace = true, features = ["serde"] }
+criterion = "0.7"
+hex = { workspace = true }
+rand = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tempfile = { workspace = true }
+zstd = { workspace = true }
+
+[features]
+default = []
+bitcoinkernel = ["dep:bitcoinkernel"]
+metrics = ["dep:metrics"]
+test-utils = ["dep:serde"]
+flat-chainstore = ["dep:memmap2", "dep:lru", "dep:twox-hash"]
+
+[[bench]]
+name = "chain_state_bench"
+harness = false
+required-features = ["flat-chainstore", "test-utils"]
+
+[lints]
+workspace = true

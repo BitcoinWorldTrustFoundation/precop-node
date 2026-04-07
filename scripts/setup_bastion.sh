@@ -48,8 +48,8 @@ else
 fi
 
 # 🚀 5. PERMISSIONS
-if [ -f "$PROJECT_ROOT/bin/precopscan-node" ]; then
-    chmod +x "$PROJECT_ROOT/bin/precopscan-node"
+if [ -f "$PROJECT_ROOT/bin/precop-node" ]; then
+    chmod +x "$PROJECT_ROOT/bin/precop-node"
     echo "✅ BINARY READY IN ./bin/"
 fi
 chmod +x "$PROJECT_ROOT/scripts/"*.sh

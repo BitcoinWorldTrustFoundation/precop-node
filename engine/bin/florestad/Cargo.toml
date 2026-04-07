@@ -1,0 +1,49 @@
+[package]
+name = "florestad"
+version = "0.9.0"
+edition = "2021"
+authors = ["Floresta Developers <contact@getfloresta.org>"]
+license = "MIT"
+description = """
+The main binary for Floresta, a lightweight Bitcoin node implementation in Rust,
+utilizing Utreexo for efficient state management.
+
+This binary is a cli utility to run the full node, and interact with it via RPC. You may also
+run this binary as a daemon on unix systems. There's a couple of features and command-line
+options to customize the node to your needs. Check out the README.md and the documentation
+for more information on how to use and configure Florestad.
+"""
+repository = "https://github.com/getfloresta/Floresta"
+readme.workspace = true # Floresta/README.md
+keywords = ["bitcoin", "utreexo", "node", "blockchain", "rust"]
+categories = ["cryptography::cryptocurrencies", "command-line-utilities"]
+
+[dependencies]
+bitcoin = { workspace = true }
+clap = { workspace = true, features = ["help"] }
+console-subscriber = { workspace = true, optional = true }
+dirs = { version = "4.0", default-features = false }
+tokio = { workspace = true }
+tracing = { workspace = true }
+tracing-appender = { version = "0.2", default-features = false }
+tracing-subscriber = { version = "0.3", features = ["chrono", "ansi", "env-filter"] }
+
+# Local dependencies
+floresta-node = { workspace = true }
+
+[target.'cfg(unix)'.dependencies]
+libc = { version = "0.2" }
+
+[build-dependencies]
+toml = { workspace = true }
+
+[features]
+default = ["json-rpc"]
+compact-filters = ["floresta-node/compact-filters"]
+zmq-server = ["floresta-node/zmq-server"]
+json-rpc = ["floresta-node/json-rpc", "compact-filters"]
+metrics = ["floresta-node/metrics"]
+tokio-console = ["dep:console-subscriber"]
+
+[lints]
+workspace = true
