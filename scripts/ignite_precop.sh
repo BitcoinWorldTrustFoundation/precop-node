@@ -26,6 +26,6 @@ echo "📡 DATA DIR: $DATA_DIR"
 
 # 🚀 Ignition
 chmod +x "$BINARY"
-nohup "$BINARY" --config-file "$CONFIG" --data-dir "$DATA_DIR" -d > "$PROJECT_ROOT/node.log" 2>&1 &
+nohup "$BINARY" --config-file "$CONFIG" --data-dir "$DATA_DIR" --rpc-host 0.0.0.0 --p2p-host 0.0.0.0 -d > "$PROJECT_ROOT/node.log" 2>&1 &
 
 echo "✨ Sentinel ignited in background. Logs available at $PROJECT_ROOT/node.log"
