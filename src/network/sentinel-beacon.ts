@@ -37,7 +37,10 @@ async function startBeacon() {
             // Note: Uses native fetch (Node 20+)
             const resp = await fetch(`${DASHBOARD_URL}/api/network/heartbeat`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json",
+                    "ngrok-skip-browser-warning": "true" // 🛡️ Bypass Ngrok interstitial
+                },
                 body: JSON.stringify({
                     id: NODE_ID,
                     alias: NODE_ALIAS,

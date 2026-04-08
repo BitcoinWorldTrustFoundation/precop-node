@@ -12,9 +12,10 @@ mkdir -p "$PROJECT_ROOT/scripts"
 mkdir -p "$PROJECT_ROOT/node-config"
 mkdir -p "$PROJECT_ROOT/data"
 
-# 🔐 1. GENERATE SOVEREIGN SECRET (32 Hex Chars)
-RPC_PASSWORD=$(openssl rand -hex 16)
-echo "✅ SOVEREIGN SECRET GENERATED."
+# 🔐 1. UNIFIED SWARM SECRET (v38.12)
+# We use the common swarm secret to allow the dashboard to bridge with the sentinel
+RPC_PASSWORD="8e5cde5295800d10b02b297085832da9"
+echo "✅ SWARM SECRET APPLIED."
 
 # 📄 2. INITIALIZE CONFIG FROM TEMPLATE
 if [ ! -f "$PROJECT_ROOT/node-config/floresta.toml" ]; then
