@@ -1,9 +1,10 @@
+import "dotenv/config";
 import { callRPC } from "../rpc/floresta-rpc";
 
 /**
  * 🛰️ STANDALONE SENTINEL BEACON (V38-STANDALONE)
- * Decoupled Radar Signal. Transmits node status independently of any other repository.
- * Migrated to precop-node/src/network for Sovereign Standalone operation.
+ * Decoupled Radar Signal. Transmits node status independently.
+ * Self-loads configuration from .env for maximum reliability.
  */
 const DASHBOARD_URL = process.env.DASHBOARD_URL || "http://localhost:3001";
 const NODE_ALIAS    = process.env.NODE_ALIAS || "Sovereign-Sentinel";
