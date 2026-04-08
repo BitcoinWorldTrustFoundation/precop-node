@@ -34,13 +34,13 @@ if [ ! -f "$PROJECT_ROOT/.env" ]; then
 RPC_URL="http://127.0.0.1:8332"
 RPC_USER="floresta"
 RPC_PASSWORD="8e5cde5295800d10b02b297085832da9"
-DASHBOARD_URL="http://localhost:3001"
+DASHBOARD_URL="https://interproportional-tameika-isorhythmically.ngrok-free.dev"
 NODE_ALIAS="SOVEREIGN-SENTINEL"
 NODE_ID="sentinel-$(date +%s)"
 EOF
 else
     # 🕵️ Incremental hardening: ensure Swarm variables are present
-    grep -q "DASHBOARD_URL" "$PROJECT_ROOT/.env" || echo "DASHBOARD_URL=\"http://localhost:3001\"" >> "$PROJECT_ROOT/.env"
+    grep -q "DASHBOARD_URL" "$PROJECT_ROOT/.env" || echo "DASHBOARD_URL=\"https://interproportional-tameika-isorhythmically.ngrok-free.dev\"" >> "$PROJECT_ROOT/.env"
     grep -q "NODE_ALIAS" "$PROJECT_ROOT/.env" || echo "NODE_ALIAS=\"SOVEREIGN-SENTINEL\"" >> "$PROJECT_ROOT/.env"
     grep -q "NODE_ID" "$PROJECT_ROOT/.env" || echo "NODE_ID=\"sentinel-$(date +%s)\"" >> "$PROJECT_ROOT/.env"
 fi

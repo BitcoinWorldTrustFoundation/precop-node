@@ -44,7 +44,7 @@ RPC_PASS=$RPC_PASSWORD
 RPC_HOST=127.0.0.1
 RPC_PORT=8332
 DATABASE_URL="postgresql://$(whoami)@localhost/precopscan_vault?host=/tmp"
-DASHBOARD_URL="http://localhost:3001"
+DASHBOARD_URL="https://interproportional-tameika-isorhythmically.ngrok-free.dev"
 NODE_ALIAS="SOVEREIGN-SENTINEL"
 NODE_ID="sentinel-$(date +%s)"
 EOF
