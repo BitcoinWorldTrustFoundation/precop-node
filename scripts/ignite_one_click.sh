@@ -18,35 +18,74 @@ echo "🏹 AWAKENING SOVEREIGN SENTINEL (ONE-CLICK MODE)..."
 case "$OS_TYPE" in
     Linux)
         echo "🐧 Linux detected ($HW_TYPE). Fetching Universal Linux Sentinel..."
-        BINARY_PATH="precop-node-linux"
+        BINARY_NAME="precop-node-linux-x86_64"
+        [[ "$HW_TYPE" == "aarch64" ]] && BINARY_NAME="precop-node-linux-arm64"
+        LOCAL_BINARY="$BIN_DIR/precop-node"
         ;;
     Darwin)
         echo "🍎 MacOS detected ($HW_TYPE). Fetching Apple Sentinel..."
-        BINARY_PATH="precop-node-macos"
+        BINARY_NAME="precop-node-macos-x86_64"
+        [[ "$HW_TYPE" == "arm64" ]] && BINARY_NAME="precop-node-macos-arm64"
+        LOCAL_BINARY="$BIN_DIR/precop-node"
+        ;;
+    MINGW*|CYGWIN*|MSYS*)
+        echo "🪟 Windows detected. Fetching Windows Sentinel..."
+        BINARY_NAME="precop-node-windows.exe"
+        LOCAL_BINARY="$BIN_DIR/precop-node.exe"
         ;;
     *)
-        echo "🚨 Unsupported OS: $OS_TYPE."
+        echo "🚨 Unsupported OS: $OS_TYPE"
         exit 1
         ;;
 esac
 
-DOWNLOAD_URL="$REPO_URL/releases/download/$RELEASE_TAG/$BINARY_PATH"
-
-if [ ! -f "$BIN_DIR/precop-node" ]; then
-    echo "📡 Downloading $BINARY_PATH from $RELEASE_TAG..."
-    curl -L "$DOWNLOAD_URL" -o "$BIN_DIR/precop-node"
-    chmod +x "$BIN_DIR/precop-node"
+if [ ! -f "$LOCAL_BINARY" ]; then
+    DOWNLOAD_URL="$REPO_URL/releases/download/$RELEASE_TAG/$BINARY_NAME"
+    echo "📥 Downloading binary from $DOWNLOAD_URL..."
+    curl -L "$DOWNLOAD_URL" -o "$LOCAL_BINARY"
+    chmod +x "$LOCAL_BINARY"
 else
-    echo "✅ Binary already present in ./bin/precop-node."
+    echo "✅ Binary already present in $LOCAL_BINARY."
 fi
 
-# 🛡️ 3. FORGE THE BASTION
-echo "🏗️  Running setup..."
+# 🏗️ 3. FORGE THE FULL-STACK (L2 & Dashboard)
+echo "🏗️  FORGING FULL-STACK REAPER ENGINE..."
+
+# --- 🟢 NODE.JS & NPM CHECK ---
+if ! command -v npm &> /dev/null; then
+    echo "⚠️  WARNING: Node.js/NPM not found. Skip L2/Dashboard setup."
+else
+    echo "✅ Node.js detected. Synchronizing modules..."
+    
+    # 1. PRECOP-INDEXER
+    if [ -d "$PROJECT_ROOT/../precop-indexer" ]; then
+        echo "📦 Preparing Indexer..."
+        (cd "$PROJECT_ROOT/../precop-indexer" && npm install --silent && npx prisma db push --accept-data-loss --silent && npx prisma generate --silent)
+        echo "✅ Indexer Alchemy Complete."
+    fi
+
+    # 2. PRECOP-DASHBOARD
+    if [ -d "$PROJECT_ROOT/../precop-dashboard" ]; then
+        echo "📦 Preparing Dashboard..."
+        (cd "$PROJECT_ROOT/../precop-dashboard" && npm install --silent && npx prisma generate --silent)
+        echo "✅ Dashboard Alchemy Complete."
+    fi
+fi
+
+# --- 🔵 DATABASE CHECK ---
+if ! command -v psql &> /dev/null; then
+    echo "⚠️  WARNING: PostgreSQL 'psql' not found. Ensure Postgres is installed for the Indexer."
+else
+    echo "✅ PostgreSQL tools detected."
+fi
+
+# 🏗️ 4. BASTION SETUP (Sentinel Logic)
+echo "🏗️  Running Sentinel setup..."
 bash "$PROJECT_ROOT/scripts/setup_bastion.sh"
 
-# 🏹 4. IGNITE THE SENTINEL
-echo "🚀 Igniting Precop..."
+# 🚀 5. FINAL IGNITION (L1)
+echo "🚀 Igniting Precop Sentinel..."
 bash "$PROJECT_ROOT/scripts/ignite_precop.sh"
 
-echo "✨ ONE-CLICK SUCCESSFUL. MISSION ACCOMPLISHED."
+echo "✨ FULL-STACK SUCCESSFUL. MISSION ACCOMPLISHED."
 echo "📜 Watch logs with: tail -f node.log"
