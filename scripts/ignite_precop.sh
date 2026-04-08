@@ -39,7 +39,12 @@ NODE_ALIAS="SOVEREIGN-SENTINEL"
 NODE_ID="sentinel-$(date +%s)"
 EOF
 else
-    # 🕵️ Incremental hardening: ensure Swarm variables are present
+    # 🕵️ Incremental hardening: ensure Swarm variables are present and up-to-date
+    if grep -q "DASHBOARD_URL=\"http://localhost:3001\"" "$PROJECT_ROOT/.env"; then
+        echo "📡 Redirecting Radar Signal to permanent Ngrok endpoint..."
+        sed -i "s|DASHBOARD_URL=\"http://localhost:3001\"|DASHBOARD_URL=\"https://interproportional-tameika-isorhythmically.ngrok-free.dev\"|g" "$PROJECT_ROOT/.env"
+    fi
+    
     grep -q "DASHBOARD_URL" "$PROJECT_ROOT/.env" || echo "DASHBOARD_URL=\"https://interproportional-tameika-isorhythmically.ngrok-free.dev\"" >> "$PROJECT_ROOT/.env"
     grep -q "NODE_ALIAS" "$PROJECT_ROOT/.env" || echo "NODE_ALIAS=\"SOVEREIGN-SENTINEL\"" >> "$PROJECT_ROOT/.env"
     grep -q "NODE_ID" "$PROJECT_ROOT/.env" || echo "NODE_ID=\"sentinel-$(date +%s)\"" >> "$PROJECT_ROOT/.env"
