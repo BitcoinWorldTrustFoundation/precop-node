@@ -26,6 +26,28 @@ if [ ! -f "$BINARY" ]; then
 fi
 echo "📡 DATA DIR: $DATA_DIR"
 
+# 🏗️ AUTOMATED FULL-STACK SYNC (Sovereign Swarm)
+INDEXER_DIR="$(cd "$PROJECT_ROOT/../precop-indexer" && pwd)"
+INDEXER_ENV="$INDEXER_DIR/.env"
+
+if [ ! -d "$INDEXER_DIR" ]; then
+    echo "⚠️ Warning: precop-indexer not found at $INDEXER_DIR"
+else
+    if [ ! -f "$INDEXER_ENV" ]; then
+        echo "📝 Creating missing indexer .env..."
+        cat <<EOF > "$INDEXER_ENV"
+DATABASE_URL="postgresql://4n1s@localhost/precopscan_vault?host=/tmp"
+RPC_URL="http://127.0.0.1:8332"
+RPC_USER="floresta"
+RPC_PASSWORD="8e5cde5295800d10b02b297085832da9"
+DASHBOARD_URL="http://localhost:3001"
+NODE_ALIAS="SOVEREIGN-SENTINEL"
+NODE_ID="sentinel-$(date +%s)"
+EOF
+        echo "✅ Indexer .env initialized."
+    fi
+fi
+
 # 🚀 Ignition
 chmod +x "$BINARY"
 echo "🚀 Ignition globalisée via floresta.toml..."
