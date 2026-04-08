@@ -8,6 +8,7 @@ user_agent = "/Precop:1.0.0/"
 [p2p]
 address = "::"
 port = 8333
+max_peers = 50
 
 [rpc]
 address = "::"
