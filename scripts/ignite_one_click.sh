@@ -48,47 +48,20 @@ else
     echo "✅ Binary already present in $LOCAL_BINARY."
 fi
 
-# 🏗️ 3. FORGE THE FULL-STACK (L2 & Dashboard Discovery)
-echo "🏗️  FORGING FULL-STACK REAPER ENGINE..."
-
-# --- 🛰️ SWARM AUTO-DISCOVERY ---
-BASE_DIR="$(cd "$PROJECT_ROOT/.." && pwd)"
-
-# 1. PRECOP-INDEXER
-if [ ! -d "$BASE_DIR/precop-indexer" ]; then
-    echo "🛰️  Indexer missing. Cloning from the Swarm..."
-    git -C "$BASE_DIR" clone https://github.com/BitcoinWorldTrustFoundation/precop-indexer.git
-else
-    echo "✅ Indexer detected."
-fi
-
-# 2. PRECOP-DASHBOARD (Optional on VPS, but required for consistent structure)
-if [ ! -d "$BASE_DIR/precop-dashboard" ]; then
-    echo "🛰️  Dashboard missing. Cloning from the Swarm..."
-    git -C "$BASE_DIR" clone https://github.com/BitcoinWorldTrustFoundation/precop-dashboard.git
-else
-    echo "✅ Dashboard detected."
-fi
+# 🏗️ 3. FORGE THE BASTION (Standalone Environment)
+echo "🏗️  FORGING STANDALONE SENTINEL ENGINE..."
 
 # --- 🟢 NODE.JS & NPM CHECK ---
 if ! command -v npm &> /dev/null; then
-    echo "⚠️  WARNING: Node.js/NPM not found. Skip L2/Dashboard setup."
+    echo "⚠️  WARNING: Node.js/NPM not found. Skip Sentinel logic setup."
 else
     echo "✅ Node.js detected. Synchronizing modules..."
     
-    # 1. PRECOP-INDEXER
-    if [ -d "$PROJECT_ROOT/../precop-indexer" ]; then
-        echo "📦 Preparing Indexer..."
-        (cd "$PROJECT_ROOT/../precop-indexer" && npm install --silent && npx prisma db push --accept-data-loss --silent && npx prisma generate --silent)
-        echo "✅ Indexer Alchemy Complete."
-    fi
-
-    # 2. PRECOP-DASHBOARD
-    if [ -d "$PROJECT_ROOT/../precop-dashboard" ]; then
-        echo "📦 Preparing Dashboard..."
-        (cd "$PROJECT_ROOT/../precop-dashboard" && npm install --silent && npx prisma generate --silent)
-        echo "✅ Dashboard Alchemy Complete."
-    fi
+    # PRECOP-NODE (Self)
+    echo "📦 Preparing Sentinel Logic..."
+    npm install --silent
+    npx prisma generate --silent
+    echo "✅ Sentinel Alchemy Complete."
 fi
 
 # --- 🔵 DATABASE CHECK & FORGE ---

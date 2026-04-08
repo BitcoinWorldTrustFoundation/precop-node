@@ -26,17 +26,11 @@ if [ ! -f "$BINARY" ]; then
 fi
 echo "📡 DATA DIR: $DATA_DIR"
 
-# 🏗️ AUTOMATED FULL-STACK SYNC (Sovereign Swarm)
-INDEXER_DIR="$(cd "$PROJECT_ROOT/../precop-indexer" && pwd)"
-INDEXER_ENV="$INDEXER_DIR/.env"
-
-if [ ! -d "$INDEXER_DIR" ]; then
-    echo "⚠️ Warning: precop-indexer not found at $INDEXER_DIR"
-else
-    if [ ! -f "$INDEXER_ENV" ]; then
-        echo "📝 Creating missing indexer .env..."
-        cat <<EOF > "$INDEXER_ENV"
-DATABASE_URL="postgresql://4n1s@localhost/precopscan_vault?host=/tmp"
+# 🏗️ AUTOMATED FULL-STACK SYNC (Sovereign Swarm Standalone)
+# Note: In Standalone mode, we use the local .env as a single source of truth.
+if [ ! -f "$PROJECT_ROOT/.env" ]; then
+    echo "📝 Creating missing Sovereign .env..."
+    cat <<EOF > "$PROJECT_ROOT/.env"
 RPC_URL="http://127.0.0.1:8332"
 RPC_USER="floresta"
 RPC_PASSWORD="8e5cde5295800d10b02b297085832da9"
@@ -44,15 +38,16 @@ DASHBOARD_URL="http://localhost:3001"
 NODE_ALIAS="SOVEREIGN-SENTINEL"
 NODE_ID="sentinel-$(date +%s)"
 EOF
-        echo "✅ Indexer .env initialized."
-    fi
+    echo "✅ Sovereign .env initialized."
 fi
+
+# Load local environment
+export $(grep -v '^#' "$PROJECT_ROOT/.env" | xargs)
 
 # 🚀 Ignition
 chmod +x "$BINARY"
 echo "🚀 Ignition globalisée via floresta.toml..."
 # On force les adresses [::] via CLI pour garantir le mode Sentinel public (Dual-Stack).
-# La redirection de port 8333 est activée - Note: Ce binaire utilise le mode Client-Only pour le P2P.
 nohup "$BINARY" -c "$CONFIG" --data-dir "$DATA_DIR" --rpc-address "[::]:8332" --electrum-address "[::]:50001" -d > "$PROJECT_ROOT/node.log" 2>&1 &
 
 echo "⏳ Awakening the Sentinel deep-state (30s cooldown)..."
@@ -61,7 +56,6 @@ if pgrep -f "precop-node" > /dev/null; then
     echo "✅ Sentinel is breathing. Initializing the Swarm handshake..."
     
     # 🛰️ SOVEREIGN SEED HANDSHAKE (V38-BEACON)
-    # On connecte automatiquement le nœud local à la balise VPS (Sovereign Seed)
     SOVEREIGN_SEED="[2a0a:4cc0:0:21b1:400:e0ff:fe79:9797]:8333"
     RPC_USER="floresta"
     RPC_PASS=$(grep "password" "$CONFIG" | cut -d '"' -f 2)
@@ -69,10 +63,11 @@ if pgrep -f "precop-node" > /dev/null; then
     echo "📡 Connecting to Sovereign Seed (Persistent Mode): $SOVEREIGN_SEED..."
     curl --silent --user "$RPC_USER:$RPC_PASS" -d "{\"jsonrpc\":\"1.0\",\"id\":\"swarm\",\"method\":\"addnode\",\"params\":[\"$SOVEREIGN_SEED\", \"add\"]}" http://127.0.0.1:8332 > /dev/null
     
-    # 📡 OTT SWARM BEACON IGNITION
-    echo "📻 Awakening the Radar Beacon (OTT Swarm)..."
-    INDEXER_DIR="$(cd "$PROJECT_ROOT/../precop-indexer" && pwd)"
-    nohup npx ts-node "$INDEXER_DIR/src/sentinel-beacon.ts" > "$PROJECT_ROOT/beacon.log" 2>&1 &
+    # 📡 STANDALONE SWARM BEACON IGNITION
+    echo "📻 Awakening the Radar Beacon (Standalone OTT)..."
+    chmod +x "$PROJECT_ROOT/node_modules/.bin/ts-node" 2>/dev/null || true
+    TS_CONFIG_BEACON="$PROJECT_ROOT/scripts/tsconfig.beacon.json"
+    nohup npx --yes ts-node --project "$TS_CONFIG_BEACON" --transpile-only "$PROJECT_ROOT/src/network/sentinel-beacon.ts" > "$PROJECT_ROOT/beacon.log" 2>&1 &
     
     echo "✨ Logs available at $PROJECT_ROOT/node.log"
 else
