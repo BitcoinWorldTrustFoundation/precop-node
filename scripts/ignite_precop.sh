@@ -3,9 +3,13 @@
 
 # 🚀 CLEANING PREVIOUS INSTANCE (Exorcism)
 echo "🛡️ Releasing database locks..."
-pkill -f "precop-node" || true
+# On tue uniquement le binaire exact, pas le script lui-même
+pkill -x "precop-node" || true
+pkill -9 "precop-node" || true
+pkill -9 florestad || true
 sleep 2
 
+echo "🏹 AWAKENING SOVEREIGN SENTINEL (PORTABLE MODE)..."
 # Determining project root dynamically
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
@@ -20,13 +24,6 @@ if [ ! -f "$BINARY" ]; then
     echo "💡 Please place the 'precop-node' binary in the bin/ folder."
     exit 1
 fi
-
-# 🗡️ Cleanup
-pkill -9 florestad || true
-pkill -9 precop-node || true
-
-echo "🏹 AWAKENING SOVEREIGN SENTINEL (PORTABLE MODE)..."
-echo "🛡️ PROJECT ROOT: $PROJECT_ROOT"
 echo "📡 DATA DIR: $DATA_DIR"
 
 # 🚀 Ignition
