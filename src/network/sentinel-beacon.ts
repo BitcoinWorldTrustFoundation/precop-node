@@ -1,10 +1,16 @@
-import "dotenv/config";
+import * as dotenv from "dotenv";
+import * as path from "path";
+import { fileURLToPath } from "url";
 import { callRPC } from "../rpc/floresta-rpc";
+
+// 🏗️ STANDALONE ENV LOADING (V38.4)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.join(__dirname, "../../.env") });
 
 /**
  * 🛰️ STANDALONE SENTINEL BEACON (V38-STANDALONE)
  * Decoupled Radar Signal. Transmits node status independently.
- * Self-loads configuration from .env for maximum reliability.
  */
 const DASHBOARD_URL = process.env.DASHBOARD_URL || "http://localhost:3001";
 const NODE_ALIAS    = process.env.NODE_ALIAS || "Sovereign-Sentinel";
