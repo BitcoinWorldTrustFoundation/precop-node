@@ -33,6 +33,14 @@ echo "📡 DATA DIR: $DATA_DIR"
 chmod +x "$BINARY"
 echo "🚀 Ignition globalisée via floresta.toml..."
 # On force les adresses [::] via CLI pour garantir le mode Sentinel public (Dual-Stack).
+# Note: On utilise des guillemets pour éviter que le shell n'interprète les crochets.
 nohup "$BINARY" -c "$CONFIG" --data-dir "$DATA_DIR" --rpc-address "[::]:8332" --electrum-address "[::]:50001" -d > "$PROJECT_ROOT/node.log" 2>&1 &
 
-echo "✨ Sentinel ignited in background. Logs available at $PROJECT_ROOT/node.log"
+echo "⏳ Awakening the Sentinel deep-state (30s cooldown)..."
+sleep 5
+if pgrep -f "precop-node" > /dev/null; then
+    echo "✅ Sentinel is breathing. Initializing the Swarm handshake..."
+    echo "✨ Logs available at $PROJECT_ROOT/node.log"
+else
+    echo "🚨 ERROR: Sentinel failed to ignite. Check $PROJECT_ROOT/node.log for details."
+fi
