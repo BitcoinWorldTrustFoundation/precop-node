@@ -29,7 +29,7 @@ echo "📡 DATA DIR: $DATA_DIR"
 # 🏗️ AUTOMATED FULL-STACK SYNC (Sovereign Swarm Standalone)
 # Note: In Standalone mode, we use the local .env as a single source of truth.
 if [ ! -f "$PROJECT_ROOT/.env" ]; then
-    echo "📝 Creating missing Sovereign .env..."
+    echo "📝 Generating fresh Sovereign .env..."
     cat <<EOF > "$PROJECT_ROOT/.env"
 RPC_URL="http://127.0.0.1:8332"
 RPC_USER="floresta"
@@ -38,7 +38,11 @@ DASHBOARD_URL="http://localhost:3001"
 NODE_ALIAS="SOVEREIGN-SENTINEL"
 NODE_ID="sentinel-$(date +%s)"
 EOF
-    echo "✅ Sovereign .env initialized."
+else
+    # 🕵️ Incremental hardening: ensure Swarm variables are present
+    grep -q "DASHBOARD_URL" "$PROJECT_ROOT/.env" || echo "DASHBOARD_URL=\"http://localhost:3001\"" >> "$PROJECT_ROOT/.env"
+    grep -q "NODE_ALIAS" "$PROJECT_ROOT/.env" || echo "NODE_ALIAS=\"SOVEREIGN-SENTINEL\"" >> "$PROJECT_ROOT/.env"
+    grep -q "NODE_ID" "$PROJECT_ROOT/.env" || echo "NODE_ID=\"sentinel-$(date +%s)\"" >> "$PROJECT_ROOT/.env"
 fi
 
 # Load local environment
