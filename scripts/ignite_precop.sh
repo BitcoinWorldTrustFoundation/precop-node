@@ -67,7 +67,10 @@ if pgrep -f "precop-node" > /dev/null; then
     echo "📻 Awakening the Radar Beacon (Standalone OTT)..."
     chmod +x "$PROJECT_ROOT/node_modules/.bin/ts-node" 2>/dev/null || true
     TS_CONFIG_BEACON="$PROJECT_ROOT/scripts/tsconfig.beacon.json"
+    # Use the ESM loader for modern Node.js environments
+    export NODE_OPTIONS="--no-warnings --loader ts-node/esm"
     nohup npx --yes ts-node --project "$TS_CONFIG_BEACON" --transpile-only "$PROJECT_ROOT/src/network/sentinel-beacon.ts" > "$PROJECT_ROOT/beacon.log" 2>&1 &
+    unset NODE_OPTIONS
     
     echo "✨ Logs available at $PROJECT_ROOT/node.log"
 else
