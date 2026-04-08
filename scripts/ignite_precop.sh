@@ -7,6 +7,8 @@ echo "🛡️ Releasing database locks..."
 pkill -x "precop-node" || true
 pkill -9 "precop-node" || true
 pkill -9 florestad || true
+pkill -f "sentinel-beacon" || true
+pkill -f "tsx" || true
 sleep 2
 
 echo "🏹 AWAKENING SOVEREIGN SENTINEL (PORTABLE MODE)..."
